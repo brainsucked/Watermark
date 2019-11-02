@@ -72,17 +72,17 @@ class Watermark {
 	 * @param string $action |open|save|
 	 */
 	private function getFunction($name, $action = 'open') {
-		if(preg_match("/^(.*)\.(jpeg|jpg)$/", $name)){
+		if(preg_match("/^(.*)\.(jpeg|jpg|JPEG|JPG)$/", $name)){
 			if($action == "open")
 				return "imagecreatefromjpeg";
 			else
 				return "imagejpeg";
-		}elseif(preg_match("/^(.*)\.(png)$/", $name)){
+		}elseif(preg_match("/^(.*)\.(png|PNG)$/", $name)){
 			if($action == "open")
 				return "imagecreatefrompng";
 			else
 				return "imagepng";
-		}elseif(preg_match("/^(.*)\.(gif)$/", $name)){
+		}elseif(preg_match("/^(.*)\.(gif|GIF)$/", $name)){
 			if($action == "open")
 				return "imagecreatefromgif";
 			else
