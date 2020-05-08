@@ -4,6 +4,12 @@
     "keywords": ["php", "watermark", "image"],
     "license": "MIT",
     "type": "library",
+	"repositories": [
+        {
+            "url": "https://github.com/brainsucked/Watermark.git",
+            "type": "git"
+        }
+    ],
     "require": {
         "php": ">=5.5.0"
     }
