@@ -1,40 +1,10 @@
 <?php
-/**
- * Apply watermark image
- * http://github.com/josemarluedke/Watermark/apply
- * 
- * Copyright 2011, Josemar Davi Luedke <josemarluedke@gmail.com>
- * 
- * Licensed under the MIT license
- * Redistributions of part of code must retain the above copyright notice.
- * 
- * @author Josemar Davi Luedke <josemarluedke@gmail.com>
- * @version 0.1.1
- * @copyright Copyright 2010, Josemar Davi Luedke <josemarluedke.com>
- * @license http://www.opensource.org/licenses/mit-license.php The MIT License
- */
+namespace ImageCopyright;
 
 class Watermark {
 	
-	/**
-	 * 
-	 * Erros
-	 * @var array
-	 */
-	public $errors = array();
-
-	/**
-	 * 
-	 * Image Source
-	 * @var img
-	 */
+	public $error = array();
 	private $imgSource = null;
-
-	/**
-	 * 
-	 * Image Watermark
-	 * @var img
-	 */
 	private $imgWatermark = null;
 
 	/**
@@ -53,10 +23,6 @@ class Watermark {
 	 */
 	private $watermarkPosition = 0;
 	
-	/**
-	 * 
-	 * Check PHP GD is enabled
-	 */
 	public function __construct(){
 		if(!function_exists("imagecreatetruecolor")){
 			if(!function_exists("imagecreate")){
@@ -72,17 +38,17 @@ class Watermark {
 	 * @param string $action |open|save|
 	 */
 	private function getFunction($name, $action = 'open') {
-		if(preg_match("/^(.*)\.(jpeg|jpg)$/", $name)){
+		if(preg_match("/^(.*)\.(jpeg|jpg)$/i", $name)){
 			if($action == "open")
 				return "imagecreatefromjpeg";
 			else
 				return "imagejpeg";
-		}elseif(preg_match("/^(.*)\.(png)$/", $name)){
+		}elseif(preg_match("/^(.*)\.(png)$/i", $name)){
 			if($action == "open")
 				return "imagecreatefrompng";
 			else
 				return "imagepng";
-		}elseif(preg_match("/^(.*)\.(gif)$/", $name)){
+		}elseif(preg_match("/^(.*)\.(gif)$/i", $name)){
 			if($action == "open")
 				return "imagecreatefromgif";
 			else
@@ -92,19 +58,10 @@ class Watermark {
 		}
 	}
 
-	/**
-	 * 
-	 * Get image sizes
-	 * @param object $img Image Object
-	 */
 	public function getImgSizes($img){
 		return array('width' => imagesx($img), 'height' => imagesy($img));
 	}
 
-	/**
-	 * Get positions for use in apply
-	 * Enter description here ...
-	 */
 	public function getPositions(){
 		$imgSource = $this->getImgSizes($this->imgSource);
 		$imgWatermark = $this->getImgSizes($this->imgWatermark);
@@ -176,34 +133,42 @@ class Watermark {
 	 * @param string $imgWatermark Name image watermark
 	 * @param number $position Position watermark
 	 */
-	public function apply($imgSource, $imgTarget,  $imgWatermark, $position = 0){
-		# Set watermark position
+	public function apply($imgSource, $imgTarget, $imgWatermark, $position = 0){
 		$this->watermarkPosition = $position;
 
-		# Get function name to use for create image
 		$functionSource = $this->getFunction($imgSource, 'open');
 		$this->imgSource = $functionSource($imgSource);
 
-		# Get function name to use for create image
 		$functionWatermark = $this->getFunction($imgWatermark, 'open');
 		$this->imgWatermark = $functionWatermark($imgWatermark);
 		
-		# Get watermark images size
 		$sizesWatermark = $this->getImgSizes($this->imgWatermark);
 
-		# Get watermark position
 		$positions = $this->getPositions();
 
-		# Apply watermark
+		// Apply watermark
 		imagecopy($this->imgSource, $this->imgWatermark, $positions['x'], $positions['y'], 0, 0, $sizesWatermark['width'], $sizesWatermark['height']);
 
-		# Get function name to use for save image
+		// Get function name to use for save image
 		$functionTarget = $this->getFunction($imgTarget, 'save');
+		
+		// Change default DPI from 96 to 72
+		imageresolution($this->imgSource, 72);
 
-		# Save image
-		$functionTarget($this->imgSource, $imgTarget, 100);
+		// Save image
+		//$functionTarget($this->imgSource, $imgTarget); // Default quality
+		
+		if(preg_match('/^(.*)\.(jpeg|jpg)$/i', $imgTarget)){
+			$functionTarget($this->imgSource, $imgTarget, 100);
+		}elseif(preg_match('/^(.*)\.(png)$/i', $imgTarget)){
+			// uncomment for transparency
+			//imagealphablending($this->imgSource, false);
+			//imagesavealpha($this->imgSource, true);
+			$functionTarget($this->imgSource, $imgTarget, 0);
+		}elseif(preg_match('/^(.*)\.(gif)$/i', $imgTarget)){
+			$functionTarget($this->imgSource, $imgTarget);
+		}
 
-		# Destroy temp images
 		imagedestroy($this->imgSource);
 		imagedestroy($this->imgWatermark);
 	}
