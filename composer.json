@@ -2,8 +2,9 @@
 	"name": "brainsucked/watermark",
     "description": "Apply watermark image with PHP",
     "keywords": ["php", "watermark", "image"],
+	"homepage": "https://github.com/brainsucked/Watermark",
     "license": "MIT",
-    "type": "library",
+    "type": "package",
 	"repositories": [
         {
             "url": "https://github.com/brainsucked/Watermark.git",
