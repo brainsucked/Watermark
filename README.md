@@ -4,9 +4,21 @@ Apply watermark image with PHP
 
 ## Getting Started
 
+### Install via Composer
+If using [Composer](https://getcomposer.org/), in your `composer.json` file add:
+
+```json
+{
+    "require": {
+        "brainsucked/watermark": "master@dev"
+    }
+}
+```
+
+### Install it old way
 Include watermark class
 ```php
-require_once __DIR__ . '/../vendor/watermark/watermark.php';
+require_once __DIR__ . '/../vendor/brainsucked/watermark.php';
 ```
 
 Watermark class started
