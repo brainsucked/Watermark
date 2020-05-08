@@ -7,8 +7,8 @@
     "type": "package",
 	"repositories": [
         {
-            "url": "https://github.com/brainsucked/Watermark.git",
-            "type": "git"
+			"type": "vcs",
+            "url": "https://github.com/brainsucked/Watermark"
         }
     ],
     "require": {
