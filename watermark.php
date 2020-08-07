@@ -43,6 +43,11 @@ class Watermark {
 				return "imagecreatefromjpeg";
 			else
 				return "imagejpeg";
+		}elseif(preg_match("/^(.*)\.(webp)$/i", $name)){
+			if($action == "open")
+				return "imagecreatefromwebp";
+			else
+				return "imagewebp";
 		}elseif(preg_match("/^(.*)\.(png)$/i", $name)){
 			if($action == "open")
 				return "imagecreatefrompng";
@@ -159,7 +164,9 @@ class Watermark {
 		//$functionTarget($this->imgSource, $imgTarget); // Default quality
 		
 		if(preg_match('/^(.*)\.(jpeg|jpg)$/i', $imgTarget)){
-			$functionTarget($this->imgSource, $imgTarget, 100);
+			$functionTarget($this->imgSource, $imgTarget, 85);
+		}elseif(preg_match('/^(.*)\.(webp)$/i', $imgTarget)){
+			$functionTarget($this->imgSource, $imgTarget, 85);
 		}elseif(preg_match('/^(.*)\.(png)$/i', $imgTarget)){
 			// uncomment for transparency
 			//imagealphablending($this->imgSource, false);
